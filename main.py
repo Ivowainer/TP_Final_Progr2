@@ -8,8 +8,17 @@ def read_file(file_name):
   content = []
 
   for index_word in range(0, len(lines_of_text)):
-    content.append(lines_of_text[index_word].replace('\n', ' ').split(' '))
+
+    index_word_aux = lines_of_text[index_word].replace('\n', '').split(' ')
+
+    # Eliminar ''
+    if '' in index_word_aux:
+      index_word_aux.remove('')
+
+    content.append(index_word_aux)
+
   file.close()
+
   return content 
 
 def get_keys_max_val(dict):
@@ -22,17 +31,17 @@ def get_keys_max_val(dict):
       
   return keys_max_val
 
-def isolate_words(words):
+def isolate_words(words, radius):
   words_isolate = []
   i = 0
 
   while i < len(words) and words[i] != '_':
-    if i+1 < len(words) and words[i+1] == '_' :
+    if i+radius < len(words) and words[i+radius] == '_' :
       words_isolate.append(words[i])
     i += 1
 
-  if i+1 < len(words) and words[i] == '_': # En caso, el guión se encuentre como primer caracter
-    words_isolate.append(words[i+1])
+  if i+radius < len(words) and words[i] == '_': # En caso, el guión se encuentre como primer caracter
+    words_isolate.append(words[i+radius])
 
   return words_isolate
 
@@ -41,7 +50,6 @@ def add_words(words, words_isolate, f_phrase):
 
   for i in range(0, len(words)):
     # Caso en que el Guion bajo esté primero
-    
     if f_phrase[0] == '_' and words[i] == words_isolate[0]:
       dict[words[i-1]] = dict.get(words[i-1], 0) + 1
     # Caso en que el Guion bajo esté ultimo
@@ -55,6 +63,10 @@ def add_words(words, words_isolate, f_phrase):
     elif len(words_isolate) == 2 and words[i] == words_isolate[1]:
       dict[words[i-1]] = dict.get(words[i-1], 0) + 1
 
+    elif(words[i] == words_isolate[0]): # Caso de que se encuentre en un radio mayor.
+      dict[words[i+1]] = dict.get(words[i+1], 0) + 1
+      dict[words[i-1]] = dict.get(words[i-1], 0) + 1
+
   return dict
 
 def print_phrase(phrase, dict):
@@ -63,7 +75,9 @@ def print_phrase(phrase, dict):
   print(' '.join(phrase).replace('_', random_word))
 
 def format_text_phrase(phrase):
-  return ' '.join(phrase).replace("_,", "_").replace("_.", "_").replace(".", "").split(" ")
+  if '_' not in phrase:
+    return None
+  return ' '.join(phrase).replace("_,", "_").replace("_.", "_").replace(".", "").lower().split(" ")
   
 
 
@@ -78,8 +92,16 @@ f_phrase = read_file('./Frases/' + name + '.txt')
 
 for phrase in f_phrase:
   phraseAux = format_text_phrase(phrase)
-  words_isolate = isolate_words(phraseAux) # Devuelve una lista como maximo de dos elementos, contiene las words que rodean el guion bajo
-  dict = add_words(lyrics, words_isolate, phraseAux) # Agrega words que se encuentran entre los dos elementos, o el elemento, en caso de que el guion bajo se encuentre ultimo o primero
+  if phraseAux != None:
+    words_isolate = isolate_words(phraseAux, 1) # Devuelve una lista como maximo de dos elementos, contiene las words que rodean el guion bajo
+
+    dict = add_words(lyrics, words_isolate, phraseAux) # Agrega words que se encuentran entre los dos elementos, o el elemento, en caso de que el guion bajo se encuentre ultimo o primero
+
+    # Caso de que las palabras que rodean el guion bajo, no existan, aumenta el radio
+    i = 2
+    while len(dict) == 0:
+      dict = add_words(lyrics, isolate_words(phraseAux, i), phraseAux)
+      i+=1
 
   #Se crea auxiliar para conservar los puntos y no realizar el formateo a la hora de imprimir
   print_phrase(phrase, dict)
