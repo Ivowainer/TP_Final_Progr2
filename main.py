@@ -3,7 +3,12 @@ from sys import argv
 
 def read_file(file_name):
   file = open(file_name, 'r')
-  content = file.read().replace('\n', ' ').split(" ")
+  lines_of_text = file.readlines()
+
+  content = []
+
+  for index_word in range(0, len(lines_of_text)):
+    content.append(lines_of_text[index_word].replace('\n', ' ').split(' '))
   file.close()
   return content 
 
@@ -36,7 +41,8 @@ def add_words(words, words_isolate, f_phrase):
 
   for i in range(0, len(words)):
     # Caso en que el Guion bajo esté primero
-    if f_phrase[0] == '_' and words[i] == words_isolate[0]: 
+    
+    if f_phrase[0] == '_' and words[i] == words_isolate[0]:
       dict[words[i-1]] = dict.get(words[i-1], 0) + 1
     # Caso en que el Guion bajo esté ultimo
     elif f_phrase[-1] == '_' and words[i] == words_isolate[0]: 
@@ -51,17 +57,29 @@ def add_words(words, words_isolate, f_phrase):
 
   return dict
 
-def print_phrase(frase, dict):
+def print_phrase(phrase, dict):
   keys_max_val = get_keys_max_val(dict)
   random_word = keys_max_val[randint(0, len(keys_max_val) - 1)]
-  print(' '.join(frase).replace('_', random_word))
+  print(' '.join(phrase).replace('_', random_word))
 
+def format_text_phrase(phrase):
+  return ' '.join(phrase).replace("_,", "_").replace("_.", "_").replace(".", "").split(" ")
+  
+
+
+""" MAIN FUNCTION """
 script, name = argv
 
-variable = "./Entradas/" + name
-f_lyrics = read_file('./Entradas/' + name + '.txt')
+
+f_lyrics = open("./Entradas/" + name + ".txt")
+lyrics = f_lyrics.read().replace("\n", " ").split(" ")
+
 f_phrase = read_file('./Frases/' + name + '.txt')
 
-words_isolate = isolate_words(f_phrase) # Devuelve una lista como maximo de dos elementos, contiene las words que rodean el guion bajo
-dict = add_words(f_lyrics, words_isolate, f_phrase) # Agrega words que se encuentran entre los dos elementos, o el elemento, en caso de que el guion bajo se encuentre ultimo o primero
-print_phrase(f_phrase, dict)
+for phrase in f_phrase:
+  phraseAux = format_text_phrase(phrase)
+  words_isolate = isolate_words(phraseAux) # Devuelve una lista como maximo de dos elementos, contiene las words que rodean el guion bajo
+  dict = add_words(lyrics, words_isolate, phraseAux) # Agrega words que se encuentran entre los dos elementos, o el elemento, en caso de que el guion bajo se encuentre ultimo o primero
+
+  #Se crea auxiliar para conservar los puntos y no realizar el formateo a la hora de imprimir
+  print_phrase(phrase, dict)

@@ -2,38 +2,38 @@
 #include "./utils/Text_Files_Name/generate_text_files_name.c"
 #include "./utils/helpers.c"
 
-void add_text_to_output(char *name, char *filetxt, FILE *archivo_salida)
+void add_text_to_output(char *name, char *filetxt, FILE *file_output)
 {
     char path[100];
 
     /* Declaración de archivos */
     sprintf(path, "./Textos/%s/%s", name, filetxt);
-    FILE *archivo_entrada = fopen(path, "r");
+    FILE *file_input = fopen(path, "r");
 
-    char caracter, prev_caracter;
+    char character, prev_character;
 
-    if (!archivo_entrada)
+    if (!file_input)
     {
         /* printf("No se pudo abrir el archivo de entrada"); */
         return;
     }
 
-    while ((caracter = fgetc(archivo_entrada)) != EOF)
+    while ((character = fgetc(file_input)) != EOF)
     {
-        if (esMayus(caracter))
-            fputc(caracter + 32, archivo_salida);
-        else if (caracter == '\n' && prev_caracter != '.')
-            fputc(' ', archivo_salida);
-        else if (caracter != '.' && caracter != ',')
+        if (esMayus(character))
+            fputc(character + 32, file_output);
+        else if (character == '\n' && prev_character != '.')
+            fputc(' ', file_output);
+        else if (character != '.' && character != ',')
         {
-            fputc(caracter, archivo_salida);
+            fputc(character, file_output);
         }
 
-        prev_caracter = caracter;
+        prev_character = character;
     }
-    fputc('\n', archivo_salida);
+    fputc('\n', file_output);
 
-    fclose(archivo_entrada);
+    fclose(file_input);
 }
 
 int main(int argc, char *argv[])
@@ -47,28 +47,28 @@ int main(int argc, char *argv[])
     /* PARTE DONDE CREA EL ARCHIVO */
     generate_text_files_name(argv[1]);
 
-    FILE *fp = fopen("./utils/Text_Files_Name/text_files_name.txt", "r");
+    FILE *text_files_name = fopen("./utils/Text_Files_Name/text_files_name.txt", "r");
 
     /* CREA EL ARCHIVO DE SALIDA (ENTRADAS) */
     char path[100];
     sprintf(path, "./Entradas/%s.txt", argv[1]);
-    FILE *archivo_salida = fopen(path, "w");
+    FILE *file_output = fopen(path, "w");
 
     char *stringAux = malloc(sizeof(char) * 100); // String auxiliar para guardar los nombres de los archivos
     stringAux[0] = '\0';
-    char caracter;
+    char character;
     int i = 0;
-    while ((caracter = fgetc(fp)) != EOF)
+    while ((character = fgetc(text_files_name)) != EOF)
     {
-        if (caracter != '\n')
+        if (character != '\n')
         {
-            stringAux[i] = caracter;
+            stringAux[i] = character;
             stringAux[i + 1] = '\0';
             i++;
         }
         else
         {
-            add_text_to_output(argv[1], stringAux, archivo_salida);
+            add_text_to_output(argv[1], stringAux, file_output);
 
             free(stringAux);
             stringAux = malloc(sizeof(char) * 100);
@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    fclose(archivo_salida);
+    fclose(file_output);
 
     sprintf(path, "python3 main.py %s", argv[1]);
     system(path);
