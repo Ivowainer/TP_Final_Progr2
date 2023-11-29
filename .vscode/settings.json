@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "get_text_files.h": "c"
+        "get_text_files.h": "c",
+        "stdio.h": "c"
     }
 }
