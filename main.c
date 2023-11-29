@@ -2,25 +2,21 @@
 #include "./utils/Text_Files_Name/generate_text_files_name.c"
 #include "./utils/helpers.c"
 
-void add_text_to_output(char *name, char *filetxt)
+void add_text_to_output(char *name, char *filetxt, FILE *archivo_salida)
 {
     char path[100];
 
+    /* Declaración de archivos */
     sprintf(path, "./Textos/%s/%s", name, filetxt);
-
-    FILE *archivo_entrada, *archivo_salida;
-    archivo_entrada = fopen(path, "r");
+    FILE *archivo_entrada = fopen(path, "r");
 
     char caracter, prev_caracter;
 
     if (!archivo_entrada)
     {
-        printf("No se pudo abrir el archivo de entrada");
+        /* printf("No se pudo abrir el archivo de entrada"); */
         return;
     }
-
-    sprintf(path, "./Entradas/%s.txt", name);
-    archivo_salida = fopen(path, "a");
 
     while ((caracter = fgetc(archivo_entrada)) != EOF)
     {
@@ -38,7 +34,6 @@ void add_text_to_output(char *name, char *filetxt)
     fputc('\n', archivo_salida);
 
     fclose(archivo_entrada);
-    fclose(archivo_salida);
 }
 
 int main(int argc, char *argv[])
@@ -54,7 +49,13 @@ int main(int argc, char *argv[])
 
     FILE *fp = fopen("./utils/Text_Files_Name/text_files_name.txt", "r");
 
-    char *stringAux = malloc(sizeof(char) * 100);
+    /* CREA EL ARCHIVO DE SALIDA (ENTRADAS) */
+    char path[100];
+    sprintf(path, "./Entradas/%s.txt", argv[1]);
+    FILE *archivo_salida = fopen(path, "w");
+
+    char *stringAux = malloc(sizeof(char) * 100); // String auxiliar para guardar los nombres de los archivos
+    stringAux[0] = '\0';
     char caracter;
     int i = 0;
     while ((caracter = fgetc(fp)) != EOF)
@@ -62,16 +63,23 @@ int main(int argc, char *argv[])
         if (caracter != '\n')
         {
             stringAux[i] = caracter;
+            stringAux[i + 1] = '\0';
             i++;
         }
         else
         {
-            add_text_to_output(argv[1], stringAux);
+            add_text_to_output(argv[1], stringAux, archivo_salida);
+
+            free(stringAux);
             stringAux = malloc(sizeof(char) * 100);
+            stringAux[0] = '\0';
             i = 0;
         }
     }
 
-    /* system("python3 main.py") */
+    fclose(archivo_salida);
+
+    sprintf(path, "python3 main.py %s", argv[1]);
+    system(path);
     return 0;
 }

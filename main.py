@@ -1,4 +1,5 @@
 from random import randint
+from sys import argv
 
 def read_file(file_name):
   file = open(file_name, 'r')
@@ -55,8 +56,11 @@ def print_phrase(frase, dict):
   random_word = keys_max_val[randint(0, len(keys_max_val) - 1)]
   print(' '.join(frase).replace('_', random_word))
 
-f_lyrics = read_file('./Entradas/Fito_Paez.txt')
-f_phrase = read_file('./Frases/Fito_Paez.txt')
+script, name = argv
+
+variable = "./Entradas/" + name
+f_lyrics = read_file('./Entradas/' + name + '.txt')
+f_phrase = read_file('./Frases/' + name + '.txt')
 
 words_isolate = isolate_words(f_phrase) # Devuelve una lista como maximo de dos elementos, contiene las words que rodean el guion bajo
 dict = add_words(f_lyrics, words_isolate, f_phrase) # Agrega words que se encuentran entre los dos elementos, o el elemento, en caso de que el guion bajo se encuentre ultimo o primero
