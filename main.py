@@ -74,34 +74,36 @@ def print_phrase(phrase, dict):
   random_word = keys_max_val[randint(0, len(keys_max_val) - 1)]
   print(' '.join(phrase).replace('_', random_word))
 
-def format_text_phrase(phrase):
+def format_text_phrase(phrase): # Retorna NONE en caso de que no haya '_'
   if '_' not in phrase:
     return None
   return ' '.join(phrase).replace("_,", "_").replace("_.", "_").replace(".", "").lower().split(" ")
+
+def main(name):
+  f_lyrics = open("./Entradas/" + name + ".txt")
+  lyrics = f_lyrics.read().replace("\n", " ").split(" ")
+
+  f_phrase = read_file('./Frases/' + name + '.txt')
+
+  for phrase in f_phrase:
+    phraseAux = format_text_phrase(phrase)
+    if phraseAux != None:
+      words_isolate = isolate_words(phraseAux, 1) # Devuelve una lista como maximo de dos elementos, contiene las words que rodean el guion bajo
+
+      dict = add_words(lyrics, words_isolate, phraseAux) # Agrega words que se encuentran entre los dos elementos, o el elemento, en caso de que el guion bajo se encuentre ultimo o primero
+
+      # Caso de que las palabras que rodean el guion bajo, no existan, aumenta el radio
+      i = 2
+      while i < len(phrase) and len(dict) == 0:
+        try:
+          dict = add_words(lyrics, isolate_words(phraseAux, i), phraseAux)
+          i+=1
+        except:
+          dict[lyrics[randint(0, len(lyrics))]] = 1
   
+    # Se crea auxiliar para conservar los puntos y no realizar el formateo a la hora de imprimir
+    print_phrase(phrase, dict)
 
-
-""" MAIN FUNCTION """
+""" ARGUMENTS """
 script, name = argv
-
-
-f_lyrics = open("./Entradas/" + name + ".txt")
-lyrics = f_lyrics.read().replace("\n", " ").split(" ")
-
-f_phrase = read_file('./Frases/' + name + '.txt')
-
-for phrase in f_phrase:
-  phraseAux = format_text_phrase(phrase)
-  if phraseAux != None:
-    words_isolate = isolate_words(phraseAux, 1) # Devuelve una lista como maximo de dos elementos, contiene las words que rodean el guion bajo
-
-    dict = add_words(lyrics, words_isolate, phraseAux) # Agrega words que se encuentran entre los dos elementos, o el elemento, en caso de que el guion bajo se encuentre ultimo o primero
-
-    # Caso de que las palabras que rodean el guion bajo, no existan, aumenta el radio
-    i = 2
-    while len(dict) == 0:
-      dict = add_words(lyrics, isolate_words(phraseAux, i), phraseAux)
-      i+=1
-
-  #Se crea auxiliar para conservar los puntos y no realizar el formateo a la hora de imprimir
-  print_phrase(phrase, dict)
+main(name)
