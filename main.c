@@ -56,36 +56,14 @@ int main(int argc, char *argv[])
     sprintf(path, "./Entradas/%s.txt", argv[1]);
     FILE *file_output = fopen(path, "w");
 
-    /* 3. Declaración de string auxiliar y su iterador */
-    char *stringAux = malloc(sizeof(char) * 100); // String auxiliar para guardar los nombres de los archivos por cada \n
-    stringAux[0] = '\0';
-    int i = 0; // Iterador del string auxiliar
-
-    /* 4. Declaración del bucle while por cada caracter de text_files_name */
-    char character; // Iterador que almacena cada caracter del archivo por cada iteración del bucle while
-    while ((character = fgetc(text_files_name)) != EOF)
+    /* 3. Declaración del bucle while por cada línea de text_files_name y
+    ejecución de add_text_to_output por cada archivo recorrido (almacenado en path) */
+    while ((fscanf(text_files_name, "%s", path)) != EOF)
     {
-        /* 5. Verificación y manipulación del auxiliar stringAux */
-        if (character != '\n')
-        {
-            stringAux[i] = character;
-            stringAux[i + 1] = '\0';
-            i++;
-        }
-        else
-        {
-            /* 6. Ejecución de add_text_to_output por cada archivo recorrido (almacenado en stringAux) */
-            add_text_to_output(argv[1], stringAux, file_output); // <--
-
-            free(stringAux);
-            stringAux = malloc(sizeof(char) * 100);
-            stringAux[0] = '\0';
-            i = 0;
-        }
+        add_text_to_output(argv[1], path, file_output); // <--
     }
 
-    /* 7. Libreación de memoria, cierre de archvios y llamada al programa Python */
-    free(stringAux);
+    /* 5. Libreación de memoria, cierre de archvios y llamada al programa Python */
     fclose(file_output);
     fclose(text_files_name);
 
