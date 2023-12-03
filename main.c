@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
         add_text_to_output(argv[1], path, file_output); // <--
     }
 
-    /* 5. Libreación de memoria, cierre de archvios y llamada al programa Python */
+    /* 4. Libreación de memoria, cierre de archvios y llamada al programa Python */
     fclose(file_output);
     fclose(text_files_name);
 
