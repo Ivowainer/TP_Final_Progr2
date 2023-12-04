@@ -89,6 +89,6 @@ format_text_phrase: List(String) -> None | List(String)
 format_text_phrase se encarga de formatear la frase, eliminado comas, puntos 
 después e independientemente de '_'. También, convierte las mayusculas en minusculas.
 """
-def format_text_phrase(phrase): # Retorna NONE en caso de que no haya '_'
-  phraseAux = ' '.join(phrase).replace("_,", "_").replace("_.", "_").replace(".", "").lower().split(" ")
+def format_text_phrase(phrase):
+  phraseAux = ' '.join(phrase).replace("_,", "_").replace("_.", "_").replace(",", "").replace(".", "").lower().split(" ")
   return phraseAux

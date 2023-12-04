@@ -17,6 +17,8 @@ int generate_text_files_name(char name[])
         return -1;
     }
 
+    fclose(faux);
+
     sprintf(command, "cd Textos/%s && ls > ../../text_files_name.txt", name);
     system(command);
 

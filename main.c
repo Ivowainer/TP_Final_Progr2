@@ -2,42 +2,6 @@
 #include "./utils/generate_text_files_name.c"
 #include "./utils/helpers.c"
 
-void add_text_to_output(char *name, char *filetxt, FILE *file_output)
-{
-    // a. Declaración de variable auxiliar path y archivos
-    char path[100];
-
-    sprintf(path, "./Textos/%s/%s", name, filetxt);
-    FILE *file_input = fopen(path, "r");
-
-    if (!file_input)
-    {
-        printf("No se pudo abrir el archivo de entrada");
-        return;
-    }
-
-    /* b. Declaración de ciclo while para archivo del artista y variables auxiliares character, prev_character */
-    char character, prev_character;
-    while ((character = fgetc(file_input)) != EOF)
-    {
-        /* c. Condiciones para el parseo y sustitución de caracteres */
-        if (esMayus(character))
-            fputc(character + 32, file_output);
-        else if (character == '\n' && prev_character != '.')
-            fputc(' ', file_output);
-        else if (character != '.' && character != ',')
-        {
-            fputc(character, file_output);
-        }
-
-        prev_character = character;
-    }
-    /* d. Agregado de \n para evitar bugs y cierre de archivo */
-    fputc('\n', file_output);
-
-    fclose(file_input);
-}
-
 int main(int argc, char *argv[])
 {
     if (argc < 2)

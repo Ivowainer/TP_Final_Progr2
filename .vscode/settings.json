@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "get_text_files.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "assert.h": "c"
     }
 }
