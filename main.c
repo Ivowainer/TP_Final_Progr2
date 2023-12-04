@@ -43,11 +43,15 @@ int main(int argc, char *argv[])
     if (argc < 2)
     {
         printf("Por favor, ingresa un argumento valido\n");
-        return 1;
+        return -1;
     }
 
     /* 1. Llama a generate_text_files_name y apertura de archivo */
-    generate_text_files_name(argv[1]);
+    if (generate_text_files_name(argv[1]) == -1)
+    {
+        printf("No existe el directorio: Textos/%s\n", argv[1]);
+        return -1;
+    }
 
     FILE *text_files_name = fopen("./text_files_name.txt", "r");
 
