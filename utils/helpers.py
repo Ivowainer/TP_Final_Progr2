@@ -25,20 +25,28 @@ rodean el '_' (retorna isolate_words) y la lista que contiene las frases formate
 Sus varios ifs sirven para verificar casos unicos en el que el programa sufría un bug. Como
 cuando el '_' es el primer elemento, o el ultimo; también cuando se necesita aumentar el radio.
 
-Retorna un diccionario, sus claves serán las posibles palabras encontradas y sus valores sus posibilidades"""
+Retorna un diccionario, sus claves serán las posibles palabras encontradas y sus valores sus posibilidades.
+Aclaracion: En caso de estar entre dos palabras conocidas en el texto, se le suma en vez de una, dos chances, debido
+a que es mas probable"""
 def add_words(lyrics, words_isolate, f_phrase):
   dict = {}
 
   for i in range(0, len(lyrics)):
+    # Caso en el que el Guion baje se encuentre entre las dos palabras coincidentes
+    if len(words_isolate) == 2 and i+2 < len(lyrics)-1 and lyrics[i] == words_isolate[0] and lyrics[i+2] == words_isolate[1]:
+      dict[lyrics[i+1]] = dict.get(lyrics[i+1], 0) + 2
+    elif len(words_isolate) == 2 and i-2 > 0 and lyrics[i] == words_isolate[1] and lyrics[i-2] == words_isolate[0]:
+      dict[lyrics[i-1]] = dict.get(lyrics[i-1], 0) + 2
+      
     # Caso en que el Guion bajo esté primero
-    if f_phrase[0] == '_' and lyrics[i] == words_isolate[0]:
+    elif f_phrase[0] == '_' and lyrics[i] == words_isolate[0]:
       dict[lyrics[i-1]] = dict.get(lyrics[i-1], 0) + 1
     # Caso en que el Guion bajo esté ultimo
     elif f_phrase[-1] == '_' and lyrics[i] == words_isolate[0]: 
       dict[lyrics[i+1]] = dict.get(lyrics[i+1], 0) + 1
 
     # Aumenta el indice de la palabra (key del dict) que se encuentra detras el guión bajo
-    elif len(words_isolate) == 2 and lyrics[i] == words_isolate[0]:
+    elif len(words_isolate) == 2 and lyrics[i] == words_isolate[0]: 
       dict[lyrics[i+1]] = dict.get(lyrics[i+1], 0) + 1
     # Aumenta el indice de la palabra (key del dict) que se encuentra despues el guión bajo
     elif len(words_isolate) == 2 and lyrics[i] == words_isolate[1]:
@@ -47,7 +55,7 @@ def add_words(lyrics, words_isolate, f_phrase):
     elif(lyrics[i] == words_isolate[0]): # Caso de que se encuentre en un radio mayor.
       dict[lyrics[i+1]] = dict.get(lyrics[i+1], 0) + 1
       dict[lyrics[i-1]] = dict.get(lyrics[i-1], 0) + 1
-
+      
   return dict
 
 """ 
