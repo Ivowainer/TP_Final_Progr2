@@ -52,7 +52,8 @@ def add_words(lyrics, words_isolate, f_phrase):
     elif len(words_isolate) == 2 and lyrics[i] == words_isolate[1]:
       dict[lyrics[i-1]] = dict.get(lyrics[i-1], 0) + 1
 
-    elif(lyrics[i] == words_isolate[0]): # Caso de que se encuentre en un radio mayor.
+    # Caso de que se encuentre en un radio mayor.
+    elif(lyrics[i] == words_isolate[0]): 
       dict[lyrics[i+1]] = dict.get(lyrics[i+1], 0) + 1
       dict[lyrics[i-1]] = dict.get(lyrics[i-1], 0) + 1
       

@@ -30,7 +30,7 @@ def read_file(file_name):
 
 def main(name):
   f_lyrics = open("./Entradas/" + name + ".txt")
-  lyrics = f_lyrics.read().replace("\n", " ").split(" ")  # La lista contiene como elementos cada palabra del archivo
+  lyrics = f_lyrics.read().replace('\n', ' ').split(' ')  # La lista contiene como elementos cada palabra del archivo
   f_lyrics.close()
 
   f_phrase = read_file('./Frases/' + name + '.txt') 
