@@ -34,9 +34,9 @@ def add_words(lyrics, words_isolate, f_phrase):
   for i in range(0, len(lyrics)):
     # Caso en el que el Guion baje se encuentre entre las dos palabras coincidentes
     if len(words_isolate) == 2 and i+2 < len(lyrics)-1 and lyrics[i] == words_isolate[0] and lyrics[i+2] == words_isolate[1]:
-      dict[lyrics[i+1]] = dict.get(lyrics[i+1], 0) + 2
+      dict[lyrics[i+1]] = dict.get(lyrics[i+1], 0) + 100
     elif len(words_isolate) == 2 and i-2 > 0 and lyrics[i] == words_isolate[1] and lyrics[i-2] == words_isolate[0]:
-      dict[lyrics[i-1]] = dict.get(lyrics[i-1], 0) + 2
+      dict[lyrics[i-1]] = dict.get(lyrics[i-1], 0) + 100
       
     # Caso en que el Guion bajo esté primero
     elif f_phrase[0] == '_' and lyrics[i] == words_isolate[0]:
